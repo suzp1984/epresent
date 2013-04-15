@@ -134,13 +134,20 @@
         (hide-body)
         (when (>= (org-reduced-level (org-current-level))
                   epresent-frame-level)
-          (org-show-subtree)))
+          (org-show-subtree))
+        (goto-char (point-min))
+        (when (and (org-property-values "EXCUTE") (re-search-forward "#\\+begin_src" nil t))
+          (let ((info (org-babel-get-src-block-info)))
+            (unwind-protect
+                (eval (read (concat "(progn " (nth 1 info) ")")))))))
     ;; before first headline -- fold up subtrees as TOC
     (org-cycle '(4))))
 
 (defun epresent-top ()
   "Present the first outline heading."
   (interactive)
+  (unless (equal (current-buffer) epresent--org-buffer)
+    (switch-to-buffer epresent--org-buffer))
   (widen)
   (goto-char (point-min))
   (epresent-current-page))
@@ -148,6 +155,8 @@
 (defun epresent-next-page ()
   "Present the next outline heading."
   (interactive)
+  (unless (equal (current-buffer) epresent--org-buffer)
+    (switch-to-buffer epresent--org-buffer))
   (epresent-goto-top-level)
   (widen)
   (if (< (or (ignore-errors (org-reduced-level (org-current-level))) 0)
@@ -159,6 +168,8 @@
 (defun epresent-previous-page ()
   "Present the previous outline heading."
   (interactive)
+  (unless (equal (current-buffer) epresent--org-buffer)
+    (switch-to-buffer epresent--org-buffer))
   (epresent-goto-top-level)
   (widen)
   (org-content)
@@ -176,6 +187,8 @@
 (defun epresent-quit ()
   "Quit the current presentation."
   (interactive)
+  (unless (equal (current-buffer) epresent--org-buffer)
+    (set-buffer epresent--org-buffer))
   ;; restore the font size
   (text-scale-adjust (/ 1 epresent-text-scale))
   (org-remove-latex-fragment-image-overlays)
@@ -322,6 +335,10 @@
   (set-buffer-modified-p nil))
 
 ;;;###autoload(global-set-key [f12] 'epresent-run)
+(global-set-key '[f5] 'epresent-next-page)
+(global-set-key '[f6] 'epresent-previous-page)
+(global-set-key '[f7] 'epresent-top)
+(global-set-key '[f8] 'epresent-quit)
 
 (provide 'epresent)
 ;;; epresent.el ends here
