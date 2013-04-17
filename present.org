@@ -55,9 +55,9 @@ Squares
 
 in-line image display
 [[file:org-mode-unicorn.png]]
-* Excute source code
+* Execute source code
   :PROPERTIES:
-  :EXCUTE:   t
+  :EXECUTE:   t
   :END:
 #+begin_src emacs-lisp 
  (snake)

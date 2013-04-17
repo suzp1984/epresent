@@ -8,5 +8,5 @@ epresent.el --- Simple presentation mode for Emacs Org-mode
 
 
 My patch:
-   - Can excute source code according to the property name "EXCUTE"
+   - Can execute source code according to the property name "EXECUTE"
    - Add some global key-binding

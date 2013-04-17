@@ -136,7 +136,7 @@
                   epresent-frame-level)
           (org-show-subtree))
         (goto-char (point-min))
-        (when (and (org-property-values "EXCUTE") (re-search-forward "#\\+begin_src" nil t))
+        (when (and (org-property-values "EXECUTE") (re-search-forward "#\\+begin_src" nil t))
           (let ((info (org-babel-get-src-block-info)))
             (unwind-protect
                 (eval (read (concat "(progn " (nth 1 info) ")")))))))
