@@ -41,6 +41,7 @@
 (require 'org)
 (require 'org-exp)
 (require 'org-latex)
+(require 'cl)
 
 (defface epresent-title-face
   '((t :weight bold :height 2.4 :underline t :inherit variable-pitch))
@@ -84,6 +85,18 @@
 
 (defvar epresent-mode-line nil
   "Set the mode-line format. Hides it when nil")
+
+(defvar epresent-execute-tag "EXECUTE" 
+  "The name of the tags name to execute some source code.")
+
+(defun epresent-if-execute ()
+  "Decided if to execute a snippet."
+  (let* ((tags (org-get-tags-at))
+         (execute (member epresent-execute-tag tags)))
+    (if execute
+        t
+      nil
+      )))
 
 (defun epresent--get-frame ()
   (unless (frame-live-p epresent--frame)
@@ -136,7 +149,7 @@
                   epresent-frame-level)
           (org-show-subtree))
         (goto-char (point-min))
-        (when (and (org-property-values "EXECUTE") (re-search-forward "#\\+begin_src" nil t))
+        (when (and (epresent-if-execute) (re-search-forward "#\\+begin_src" nil t))
           (let ((info (org-babel-get-src-block-info)))
             (unwind-protect
                 (eval (read (concat "(progn " (nth 1 info) ")")))))))

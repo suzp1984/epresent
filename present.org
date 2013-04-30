@@ -55,7 +55,7 @@ Squares
 
 in-line image display
 [[file:org-mode-unicorn.png]]
-* Execute source code
+* Execute source code                                               :EXECUTE:
   :PROPERTIES:
   :EXECUTE:   t
   :END:
